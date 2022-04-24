@@ -251,7 +251,7 @@ void Code_right()
 int num1 = 0;
 void serialEvent()
 {
-  while (!Serial.available())
+  while (Serial.available())
   {
   }
   while (Serial.available())
