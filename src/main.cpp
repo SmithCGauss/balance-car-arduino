@@ -10,7 +10,7 @@ MPU6050 mpu;
 BalanceCar balancecar;
 KalmanFilter kalmanfilter;
 int16_t ax, ay, az, gx, gy, gz;
-#define sp 3
+#define speak 3
 #define IN1M 7
 #define IN2M 6
 #define IN3M 13
@@ -18,8 +18,10 @@ int16_t ax, ay, az, gx, gy, gz;
 #define PWMA 9
 #define PWMB 10
 #define STBY 8
-#define PinA_left 2  //中断0
-#define PinA_right 4 //中断1
+#define PinA_left 2
+#define PinB_left 5
+#define PinA_right 4
+#define PinB_right 11
 enum
 {
   enSTOP = 0,
@@ -92,7 +94,7 @@ int lpluse = 0;
 int sumam;
 
 //////////////////转向、旋转参数///////////////////////////
-int turncount = 0; //转向介入时间计算
+int turncount = 0;                //转向介入时间计算
 float turnoutput = 0;
 boolean newLineReceived = false;  //前一次数据结束标志
 boolean startBit = false;         //协议开始标志
@@ -282,7 +284,7 @@ void serialEvent()
 
 void setup()
 {
-  pinMode(sp, OUTPUT);
+  pinMode(speak, OUTPUT);
   pinMode(IN1M, OUTPUT); //控制电机1的方向，01为正转，10为反转
   pinMode(IN2M, OUTPUT);
   pinMode(IN3M, OUTPUT); //控制电机2的方向，01为正转，10为反转
@@ -299,6 +301,8 @@ void setup()
   analogWrite(PWMB, 0);
   pinMode(PinA_left, INPUT);
   pinMode(PinA_right, INPUT);
+  pinMode(PinB_left,INPUT);
+  pinMode(PinB_right,INPUT);
 
   // 加入I2C总线
   Wire.begin();
@@ -459,10 +463,10 @@ a:
     spinr = 1;
     break;
   case enspeak:
-    digitalWrite(sp, 0);
-    digitalWrite(sp, 1);
+    digitalWrite(speak, 0);
+    digitalWrite(speak, 1);
     delay(10);
-    digitalWrite(sp, 0);
+    digitalWrite(speak, 0);
     ResetCarState();
     break;
   default:
