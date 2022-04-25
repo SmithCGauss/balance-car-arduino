@@ -1,10 +1,3 @@
-/*
-BalanceCar.h BalanceCar.cpp - Library for BST-Balance car code.
-Created by SKY ZHU&ROOMS LUO, OCTOBER 2, 2016.
-JUST FOR THE Company of Technology of yahboom.
-In order to  avoid Infringement Act,this core is not for the commerce except being authorized by the writer.
-*/
-
 #include "BalanceCar.h"
 
 double BalanceCar::speedpiout(double kps, double kis, double kds, int f, int b, double p0)
@@ -20,10 +13,7 @@ double BalanceCar::speedpiout(double kps, double kis, double kds, int f, int b, 
   positions = constrain(positions, -3000, 3000);
   double output = kis * (p0 - positions) + kps * (p0 - speeds_filter);
   if (flag1 == 1)
-  {
     positions = 0;
-  }
-
   return output;
 }
 
@@ -42,9 +32,7 @@ float BalanceCar::turnspin(int turnleftflag, int turnrightflag, int spinleftflag
       spinonce++;
     }
     if (turnspeed < 0)
-    {
       turnspeed = -turnspeed;
-    }
     if (turnleftflag == 1 || turnrightflag == 1)
     {
       turnmax = 1;
@@ -90,14 +78,15 @@ void BalanceCar::pwma(double speedoutput, float rotationoutput, float angle, flo
                       int turnleftflag, int turnrightflag, int spinleftflag, int spinrightflag,
                       int f, int b, float accelz, int Pin1, int Pin2, int Pin3, int Pin4, int PinPWMA, int PinPWMB)
 {
-  float k = 1.02; //改变轮子转速
+  // float k = 1.02; //按比例改变轮子转速
+  //通过 角度 速度 旋转 计算出pwm
   pwm1 = -angleoutput - speedoutput - rotationoutput;
   pwm2 = -angleoutput - speedoutput + rotationoutput;
 
-  if (pwm1 > 255 / k)
-    pwm1 = 255 / k;
-  if (pwm1 < -255 / k)
-    pwm1 = -255 / k;
+  if (pwm1 > 255)
+    pwm1 = 255;
+  if (pwm1 < -255)
+    pwm1 = -255;
   if (pwm2 > 255)
     pwm2 = 255;
   if (pwm2 < -255)
@@ -125,13 +114,13 @@ void BalanceCar::pwma(double speedoutput, float rotationoutput, float angle, flo
   {
     digitalWrite(Pin2, 0);
     digitalWrite(Pin1, 1);
-    analogWrite(PinPWMA, pwm1 / k);
+    analogWrite(PinPWMA, pwm1);
   }
   else
   {
     digitalWrite(Pin2, 1);
     digitalWrite(Pin1, 0);
-    analogWrite(PinPWMA, -pwm1 / k);
+    analogWrite(PinPWMA, -pwm1);
   }
   if (pwm2 >= 0)
   {
